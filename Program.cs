@@ -5,9 +5,9 @@ using System.Threading;
 					
 public class Program
 {
-	class Whatever : IDisposable{
+	class MyDisposable : IDisposable{
         public int ID {get;private set;}
-        public Whatever(int id) => ID = id;
+        public MyDisposable(int id) => ID = id;
         Guid[] arr = Enumerable.Range(1,10000).Select(x=>Guid.NewGuid()).ToArray();
 		public void Dispose(){
 			Dispose(true);
@@ -18,21 +18,21 @@ public class Program
             if(disposing)
                 Console.WriteLine($"Disposing {ID} (with pattern)...");
         }
-		~Whatever(){
+		~MyDisposable(){
 			Console.WriteLine($"Finalizing {ID}...");
             Dispose(false);
 		}
 	}
 	public static void Main()
 	{
-		var w = new Whatever(0);
+		var w = new MyDisposable(0);
 		
 		Console.WriteLine("Hello World");
 		w = null;
         GC.Collect();
 		for(int i = 1 ; i < 2000; i++){
 			Thread.Sleep(100);
-             using(var test =  new Whatever(i) ){
+             using(var test =  new MyDisposable(i) ){// remove the "using" line and leave "test" outside so you see the change of mechanism
                 Console.Write(".");
              }
 		}
