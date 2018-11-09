@@ -6,18 +6,21 @@ using System.Threading;
 public class Program
 {
     class MyDisposable : IDisposable{
-        public int ID {get;private set;}
-        public MyDisposable(int id) => ID = id;
+        public int ID {get;private set;} // for display purposes
+        public MyDisposable(int id) => ID = id; // almost trivial constructor
         Guid[] arr = Enumerable.Range(1,10000).Select(x=>Guid.NewGuid()).ToArray();
+
         public void Dispose(){
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         public void Dispose(bool disposing){
             Console.WriteLine("I release managed resources here...");
             if(disposing)
                 Console.WriteLine($"Disposing {ID} (with pattern)...");
         }
+
         ~MyDisposable(){
             Console.WriteLine($"Finalizing {ID}...");
             Dispose(false);
